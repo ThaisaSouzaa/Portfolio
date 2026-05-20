@@ -273,6 +273,9 @@
   .proc-row p { margin: 0; color: var(--fg-soft); max-width: 56ch; }
   .proc-row .out { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); align-self: end; padding-top: 16px;}
   .proc-row .out b { display:block; font-family: var(--sans); font-weight: 500; color: var(--fg); font-size: 13px; letter-spacing: 0; text-transform: none; margin-top: 4px; }
+  .exp-bullets { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .exp-bullets li { font-family: var(--sans); font-size: 13.5px; color: var(--fg-soft); line-height: 1.6; }
+  .proc-row .role-title { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--fg); margin-bottom: 2px; }
 
   /* Experience — year-indexed */
   .exp { grid-column: 2; border-top: 1px solid var(--hairline); }
@@ -345,8 +348,9 @@
     .work, .proc, .exp { grid-column: 1; }
     .card:nth-child(n) { transform: none !important; }
     .work { grid-template-columns: 1fr; }
-    .proc-row { grid-template-columns: 48px 1fr; gap: 12px; }
-    .proc-row p, .proc-row .out { grid-column: 1 / -1; padding-left: 60px; }
+    .proc-row { grid-template-columns: 1fr; gap: 8px; }
+    .proc-row .n, .proc-row h4, .proc-row > div { grid-column: 1; }
+    .exp-bullets li { font-size: 13px; }
     .exp-row { grid-template-columns: 70px 1fr 1fr; gap: 12px; }
     .exp-row .ar, .exp-row .ar2 { display: none; }
     .foot-grid { grid-template-columns: 1fr; }
@@ -468,26 +472,37 @@
 
         <div class="sec-divider">
           <div>Index</div>
-          <div style="display:grid; grid-template-columns: 1fr 2fr 2.4fr 1fr; gap: 24px;">
-            <span>Período</span><span>Empresa</span><span>Cargo</span><span style="text-align:right;">Setor</span>
+          <div style="display:grid; grid-template-columns: 140px 1fr 2.8fr; gap: 24px;">
+            <span>Período</span><span>Empresa</span><span>Atividades</span>
           </div>
         </div>
 
         <div class="proc">
-          <div class="proc-row rv" style="grid-template-columns: 110px 1.4fr 2.4fr 1fr;">
+          <div class="proc-row rv" style="grid-template-columns: 140px 1fr 2.8fr;">
             <span class="n">Jan 2025 – Atual</span>
             <h4 class="serif">Mosten</h4>
-            <p><b style="font-family:var(--sans); font-weight:500; color:var(--fg);">UX &amp; UI Designer JR</b><br>
-            Pesquisa com usuários e prototipação de fluxos críticos em sistema operacional portuário. Contribuições contínuas ao Design System interno e alinhamento com times de engenharia e produto.</p>
-            <div class="out" style="text-align:right;">Setor<b>Portuário · Logística</b></div>
+            <div>
+              <div class="role-title">UX &amp; UI Designer Jr</div>
+              <ul class="exp-bullets">
+                <li>▸ Concepção e design de interfaces web para produtos digitais nos setores portuário, logístico e ESG — desde a descoberta até a entrega — com foco em impacto positivo para usuários e negócio.</li>
+                <li>▸ Evolução ativa do Design System, ampliando a padronização visual e otimizando a colaboração entre designers, Product Managers e desenvolvedores.</li>
+                <li>▸ Condução de pesquisas com usuários e stakeholders — aplicando entrevistas, testes de usabilidade, avaliações heurísticas e benchmarks de mercado para embasar decisões de produto com dados reais.</li>
+                <li>▸ Definição de fluxos, wireframes, mapas de jornada do usuário e arquitetura da informação, com acompanhamento de métricas e funis de conversão para aprendizado e evolução contínua dos produtos.</li>
+              </ul>
+            </div>
           </div>
 
-          <div class="proc-row rv rv-d1" style="grid-template-columns: 110px 1.4fr 2.4fr 1fr;">
+          <div class="proc-row rv rv-d1" style="grid-template-columns: 140px 1fr 2.8fr;">
             <span class="n">Jun 2024 – Dez 2024</span>
             <h4 class="serif">Mosten</h4>
-            <p><b style="font-family:var(--sans); font-weight:500; color:var(--fg);">Estagiária de UX &amp; UI Design</b><br>
-            Apoio em discovery, wireframes e testes de usabilidade em projetos de alta complexidade. Primeira imersão em times multidisciplinares e metodologias ágeis de design.</p>
-            <div class="out" style="text-align:right;">Setor<b>Portuário · Logística</b></div>
+            <div>
+              <div class="role-title">Estagiária de UX &amp; UI Design</div>
+              <ul class="exp-bullets">
+                <li>▸ Contribuição na criação do site institucional da empresa, com atuação em estrutura de navegação, design visual e documentação de decisões.</li>
+                <li>▸ Desenvolvimento e padronização do Design System, fortalecendo a identidade visual e a consistência dos produtos digitais.</li>
+                <li>▸ Participação em pesquisas com usuários, testes de usabilidade, workshops e dinâmicas de co-criação, com documentação de decisões de design e aplicação de Design Thinking e metodologias ágeis.</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
