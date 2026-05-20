@@ -280,7 +280,7 @@
   .phones-strip {
     display: flex; align-items: flex-end; justify-content: center;
     gap: 16px; width: 100%; overflow: hidden;
-    background: #f0eee9; padding: 56px var(--pad-x) 0;
+    background: #f0eee9; padding: 56px var(--pad-x) 56px;
   }
   .phones-strip.dark-strip { background: #1a1916; }
   .phone-slot {
@@ -290,6 +290,10 @@
   .phone-slot > div {
     transform-origin: top left;
   }
+
+  /* ── Esconder scrollbars nas telas do app ── */
+  [id^="mount-"] *::-webkit-scrollbar { display: none; }
+  [id^="mount-"] * { scrollbar-width: none; -ms-overflow-style: none; }
 
   /* ── Img caption ── */
   .img-caption {
@@ -391,7 +395,7 @@
       <div class="hero-tags">
         <span>UX Design · Mobile App</span>
         <span>Floricultura · E-commerce</span>
-        <span>2022 — 2023</span>
+        <span>2025 — 2026</span>
       </div>
     </div>
   </div>
@@ -401,7 +405,7 @@
     <div class="intro-l">
       <div class="intro-label">Visão geral do projeto</div>
       <p class="intro-overview">
-        Aplicativo de vendas e entrega de arranjos florais, buques e cestas de presentes — do zero à entrega, em 7 meses.
+        Aplicativo de vendas e entrega de arranjos florais, buques e cestas de presentes — do zero à entrega.
       </p>
     </div>
     <div class="intro-r">
@@ -415,7 +419,7 @@
         </div>
         <div class="meta-item">
           <div class="meta-label">Duração</div>
-          <div class="meta-val">Out 2022 — Mai 2023</div>
+          <div class="meta-val">2025 — 2026</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Tipo</div>
@@ -498,8 +502,8 @@
 
   <!-- Wireframes — onboarding e busca por categoria -->
   <div class="mockup-2 rv">
-    <div id="mount-w1" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
-    <div id="mount-w2" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+    <div id="mount-w1" style="height:clamp(340px,44vw,640px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; padding: 48px 24px;"></div>
+    <div id="mount-w2" style="height:clamp(340px,44vw,640px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; padding: 48px 24px;"></div>
   </div>
   <div class="img-caption">Fluxo de descoberta — tela de boas-vindas e busca por categoria</div>
 
@@ -530,8 +534,8 @@
 
   <!-- Hi-fi screens: home e sacola -->
   <div class="mockup-2 rv">
-    <div id="mount-d1" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
-    <div id="mount-d2" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+    <div id="mount-d1" style="height:clamp(340px,44vw,640px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; padding: 48px 24px;"></div>
+    <div id="mount-d2" style="height:clamp(340px,44vw,640px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; padding: 48px 24px;"></div>
   </div>
   <div class="img-caption">Telas do aplicativo — feed inicial e sacola de compras</div>
 

@@ -149,47 +149,15 @@
     margin-bottom: 8px;
   }
 
-  /* ── Portrait circular com anel + flip ─────── */
-  .portrait-ring {
+  /* ── Portrait circular ─────── */
+  .portrait-circle {
     width: 100%; height: 100%;
-    border-radius: 50%;
-    position: relative;
-    perspective: 800px;
-  }
-  .portrait-ring::before {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    border: 1.5px dashed var(--muted);
-    animation: ring-spin 10s linear infinite;
-    pointer-events: none;
-  }
-  @keyframes ring-spin { to { transform: rotate(360deg); } }
-
-  .portrait-flipper {
-    width: 100%; height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.85s cubic-bezier(.4,0,.2,1);
-    border-radius: 50%;
-    position: relative;
-  }
-  .portrait-flipper.alt { transform: rotateY(180deg); }
-
-  .portrait-face {
-    position: absolute; inset: 0;
     border-radius: 50%; overflow: hidden;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
   }
-  .portrait-back { transform: rotateY(180deg); }
-  .portrait-face img {
+  .portrait-circle img {
     width: 100%; height: 100%;
     object-fit: cover; object-position: center 10%;
-    display: block; user-select: none; -webkit-user-drag: none;
-  }
-  .portrait-back img {
-    filter: contrast(1.55) saturate(3.2) brightness(1.08) url(#illus-filter);
+    display: block;
   }
   .h-title .lo { font-style: normal; color: var(--muted); }
   .h-bio {
@@ -390,21 +358,6 @@
 </head>
 <body class="font-serif-display">
 
-  <!-- Filtro SVG para versão ilustração do retrato -->
-  <svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
-    <defs>
-      <filter id="illus-filter" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
-        <feGaussianBlur stdDeviation="0.7" result="blur"/>
-        <feColorMatrix type="saturate" values="2.8" in="blur" result="vivid"/>
-        <feComponentTransfer in="vivid">
-          <feFuncR type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
-          <feFuncG type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
-          <feFuncB type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
-        </feComponentTransfer>
-      </filter>
-    </defs>
-  </svg>
-
   <div class="cur-ring" id="curRing"></div>
   <div class="cur-dot" id="curDot"></div>
   <div class="frame" aria-hidden="true"></div>
@@ -434,15 +387,8 @@
     </h1>
 
     <div id="portrait" class="h-portrait rv rv-d1">
-      <div class="portrait-ring">
-        <div class="portrait-flipper" id="portraitFlipper">
-          <div class="portrait-face portrait-front">
-            <img src="portrait.jpg" alt="Thaisa Souza">
-          </div>
-          <div class="portrait-face portrait-back">
-            <img src="portrait.jpg" alt="Thaisa Souza — versão ilustração">
-          </div>
-        </div>
+      <div class="portrait-circle">
+        <img src="portrait.jpg" alt="Thaisa Souza">
       </div>
     </div>
 
@@ -475,26 +421,9 @@
         </div>
 
         <div class="work">
-          <article class="card rv" onclick="location.href='lavalog.html'" style="cursor:pointer;">
-            <img src="lavalog-cover.png" alt="LavaLog Parking" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-            <div class="card-h"><span>01 · LavaLog Parking</span><span>2025</span></div>
-            <div class="card-b">
-              <div class="ttl serif">Site institucional para <em>estacionamento</em> de caminhões</div>
-              <div class="sub">Transporte · UX/UI Designer · Site institucional</div>
-            </div>
-            <div class="reveal">
-              Projeto de site institucional para a LavaLog Parking — comunicando segurança, conforto e estrutura para motoristas de caminhão em trânsito.
-              <div class="row">
-                <div><span>Tipo</span><b>Site Institucional</b></div>
-                <div><span>Setor</span><b>Transporte / Logística</b></div>
-                <div><span>Entrega</span><b>Design completo</b></div>
-              </div>
-            </div>
-          </article>
-
-          <article class="card rv rv-d1" onclick="location.href='flohere.html'" style="cursor:pointer;">
+          <article class="card rv" onclick="location.href='flohere.html'" style="cursor:pointer;">
             <div id="mount-flohere-cover" style="position:absolute;inset:0;background:oklch(0.42 0.07 155);overflow:hidden;display:flex;align-items:flex-end;justify-content:center;gap:16px;padding-bottom:0;"></div>
-            <div class="card-h"><span>02 · FloHere</span><span>2022—2023</span></div>
+            <div class="card-h"><span>01 · FloHere</span><span>2025—2026</span></div>
             <div class="card-b">
               <div class="ttl serif">App de <em>floricultura</em> para compras online</div>
               <div class="sub">Floricultura · UX Designer · App Mobile</div>
@@ -505,6 +434,23 @@
                 <div><span>Tipo</span><b>App Mobile</b></div>
                 <div><span>Setor</span><b>Floricultura / E-commerce</b></div>
                 <div><span>Resultado</span><b>↑ vontade de comprar</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv rv-d1" onclick="location.href='lavalog.html'" style="cursor:pointer;">
+            <img src="lavalog-cover.png" alt="LavaLog Parking" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+            <div class="card-h"><span>02 · LavaLog Parking</span><span>2025</span></div>
+            <div class="card-b">
+              <div class="ttl serif">Site institucional para <em>estacionamento</em> de caminhões</div>
+              <div class="sub">Transporte · UX/UI Designer · Site institucional</div>
+            </div>
+            <div class="reveal">
+              Projeto de site institucional para a LavaLog Parking — comunicando segurança, conforto e estrutura para motoristas de caminhão em trânsito.
+              <div class="row">
+                <div><span>Tipo</span><b>Site Institucional</b></div>
+                <div><span>Setor</span><b>Transporte / Logística</b></div>
+                <div><span>Entrega</span><b>Design completo</b></div>
               </div>
             </div>
           </article>
@@ -597,7 +543,7 @@
       <div class="foot-mark">§ 04 / Contato</div>
       <div class="foot-main">
         <a href="mailto:contato.thaisaabreu@gmail.com" class="foot-mail serif">
-          contato<span class="lo">@thaisaabreu</span>
+          contato.thaisaabreu@gmail.com
         </a>
         <div class="foot-col">
           <h5>Localização</h5>
@@ -678,13 +624,6 @@
           el.style.transform = `translateY(${t}px) scale(1.05)`;
         });
       }, { passive: true });
-    })();
-
-    // Retrato: flip a cada 5s entre foto real e versão ilustração
-    (function(){
-      const flipper = document.getElementById('portraitFlipper');
-      if (!flipper) return;
-      setInterval(() => flipper.classList.toggle('alt'), 5000);
     })();
 
     // Live local time SP
