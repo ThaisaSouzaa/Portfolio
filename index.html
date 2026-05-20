@@ -148,6 +148,49 @@
     justify-self: end; align-self: end;
     margin-bottom: 8px;
   }
+
+  /* ── Portrait circular com anel + flip ─────── */
+  .portrait-ring {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    position: relative;
+    perspective: 800px;
+  }
+  .portrait-ring::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--muted);
+    animation: ring-spin 10s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes ring-spin { to { transform: rotate(360deg); } }
+
+  .portrait-flipper {
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(.4,0,.2,1);
+    border-radius: 50%;
+    position: relative;
+  }
+  .portrait-flipper.alt { transform: rotateY(180deg); }
+
+  .portrait-face {
+    position: absolute; inset: 0;
+    border-radius: 50%; overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .portrait-back { transform: rotateY(180deg); }
+  .portrait-face img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 10%;
+    display: block; user-select: none; -webkit-user-drag: none;
+  }
+  .portrait-back img {
+    filter: contrast(1.55) saturate(3.2) brightness(1.08) url(#illus-filter);
+  }
   .h-title .lo { font-style: normal; color: var(--muted); }
   .h-bio {
     grid-column: 3 / 5; grid-row: 3;
@@ -347,6 +390,21 @@
 </head>
 <body class="font-serif-display">
 
+  <!-- Filtro SVG para versão ilustração do retrato -->
+  <svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
+    <defs>
+      <filter id="illus-filter" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        <feGaussianBlur stdDeviation="0.7" result="blur"/>
+        <feColorMatrix type="saturate" values="2.8" in="blur" result="vivid"/>
+        <feComponentTransfer in="vivid">
+          <feFuncR type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
+          <feFuncG type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
+          <feFuncB type="discrete" tableValues="0.05 0.3 0.6 0.85 1.0"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
   <div class="cur-ring" id="curRing"></div>
   <div class="cur-dot" id="curDot"></div>
   <div class="frame" aria-hidden="true"></div>
@@ -375,12 +433,18 @@
       <span class="lo" style="font-size: 80px;">— designer brasileira apaixonada por criar experiências digitais que funcionam.</span>
     </h1>
 
-    <image-slot
-      id="portrait"
-      class="h-portrait rv rv-d1"
-      shape="circle"
-      placeholder="Drop portrait"
-    ></image-slot>
+    <div id="portrait" class="h-portrait rv rv-d1">
+      <div class="portrait-ring">
+        <div class="portrait-flipper" id="portraitFlipper">
+          <div class="portrait-face portrait-front">
+            <img src="portrait.jpg" alt="Thaisa Souza">
+          </div>
+          <div class="portrait-face portrait-back">
+            <img src="portrait.jpg" alt="Thaisa Souza — versão ilustração">
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="h-id rv rv-d2">
       <div>Cargo<b>UX/UI Designer e Product Designer JR</b></div>
@@ -614,6 +678,13 @@
           el.style.transform = `translateY(${t}px) scale(1.05)`;
         });
       }, { passive: true });
+    })();
+
+    // Retrato: flip a cada 5s entre foto real e versão ilustração
+    (function(){
+      const flipper = document.getElementById('portraitFlipper');
+      if (!flipper) return;
+      setInterval(() => flipper.classList.toggle('alt'), 5000);
     })();
 
     // Live local time SP
