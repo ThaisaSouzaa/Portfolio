@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LavaLog Parking — Thaisa Souza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #fdfdfd;
+    --bg-dark: #111110;
+    --fg: #111110;
+    --fg-soft: #3a3530;
+    --muted: #7a6f5d;
+    --muted-2: #b6ab97;
+    --line: rgba(17,17,16,.10);
+    --hairline: rgba(17,17,16,.14);
+    --accent: #e8692a;
+
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --pad-x: clamp(24px, 6vw, 96px);
+    --pad-x-wide: clamp(48px, 10vw, 160px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  ::selection { background: var(--fg); color: var(--bg); }
+
+  /* ── Nav ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px var(--pad-x);
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+  .nav-back {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: #fff;
+    transition: gap .3s ease;
+  }
+  .nav-back:hover { gap: 16px; }
+  .nav-back svg { flex-shrink: 0; }
+  .nav-id {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative; width: 100%;
+    background: var(--bg-dark);
+    padding: 140px var(--pad-x) 72px;
+  }
+  .hero-meta {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px;
+  }
+  .hero-title {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(48px, 7vw, 108px);
+    font-weight: 400; line-height: .92;
+    letter-spacing: -0.02em; color: #fff; margin: 0;
+  }
+  .hero-tags {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    flex-shrink: 0;
+  }
+  .hero-tags span {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.7);
+    border: 1px solid rgba(255,255,255,.25); padding: 5px 10px;
+  }
+
+  /* ── Container ── */
+  .wrap { padding-left: var(--pad-x); padding-right: var(--pad-x); }
+  .wrap-wide { padding-left: var(--pad-x-wide); padding-right: var(--pad-x-wide); }
+
+  /* ── Project intro ── */
+  .intro {
+    padding: 96px var(--pad-x);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro-l {}
+  .intro-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
+  }
+  .intro-overview {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.3; color: var(--fg); font-weight: 400;
+  }
+  .intro-r {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 32px;
+  }
+  .intro-desc {
+    font-size: 15px; color: var(--fg-soft); line-height: 1.7; max-width: 52ch;
+  }
+  .meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px;
+    padding-top: 32px; border-top: 1px solid var(--hairline);
+  }
+  .meta-item {}
+  .meta-label {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted-2); margin-bottom: 4px;
+  }
+  .meta-val {
+    font-size: 13.5px; font-weight: 500; color: var(--fg);
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 96px var(--pad-x);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .section.dark {
+    background: var(--bg-dark);
+    border-bottom-color: rgba(255,255,255,.08);
+  }
+  .section-head {
+    display: grid; grid-template-columns: 80px 1fr; gap: 32px;
+    margin-bottom: 56px; align-items: baseline;
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); padding-top: 8px;
+  }
+  .section-num.light { color: rgba(255,255,255,.35); }
+  .section h2 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400; margin: 0; line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .section h2 .lo { font-style: normal; color: var(--muted); }
+  .section.dark h2 { color: #f0ece2; }
+  .section.dark h2 .lo { color: rgba(240,236,226,.35); }
+
+  /* ── Pull quote ── */
+  .pull-quote {
+    padding: 80px var(--pad-x-wide);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .pull-quote blockquote {
+    margin: 0;
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(28px, 3.5vw, 52px);
+    line-height: 1.2; font-weight: 400; letter-spacing: -0.015em;
+    color: var(--fg);
+  }
+  .pull-quote blockquote em { color: var(--accent); font-style: italic; }
+  .pull-quote cite {
+    display: block; margin-top: 28px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+    font-style: normal;
+  }
+
+  /* ── Image layouts ── */
+  .img-full {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    display: block;
+  }
+  .img-full.tall { aspect-ratio: 4/3; }
+
+  .img-grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .img-grid-2 img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+
+  .img-grid-3 {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2px;
+  }
+  .img-grid-3 img { width: 100%; object-fit: cover; }
+  .img-grid-3 img:first-child { aspect-ratio: 3/4; }
+  .img-grid-3 img:not(:first-child) { aspect-ratio: 1/1; }
+
+  .img-caption {
+    padding: 14px var(--pad-x) 0;
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted-2);
+  }
+
+  /* ── Placeholder image block ── */
+  .ph-img {
+    background:
+      repeating-linear-gradient(135deg, rgba(122,111,93,.15) 0 1px, transparent 1px 18px),
+      #e8e5de;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ph-img .ph-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+    background: var(--bg); padding: 8px 14px;
+  }
+  .ph-img.dark-ph {
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 1px, transparent 1px 18px),
+      #1a1a18;
+  }
+  .ph-img.dark-ph .ph-label {
+    background: #111110; color: rgba(255,255,255,.35);
+  }
+
+  /* ── Process steps ── */
+  .process-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .process-item {
+    padding: 36px 0 36px;
+    border-bottom: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+    align-items: start;
+  }
+  .process-item:nth-child(odd) { padding-right: 48px; border-right: 1px solid var(--hairline); }
+  .process-item:nth-child(even) { padding-left: 48px; }
+  .process-n {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted-2); padding-top: 6px;
+  }
+  .process-item h4 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px); font-weight: 400; margin: 0 0 10px; line-height: 1.1;
+  }
+  .process-item p { margin: 0; font-size: 14px; color: var(--fg-soft); line-height: 1.65; }
+
+  /* ── Dark section content ── */
+  .dark-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .dark-card {
+    background: var(--bg-dark);
+    padding: 36px 28px 32px;
+  }
+  .dark-card-n {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 16px;
+  }
+  .dark-card h4 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px); font-weight: 400; margin: 0 0 12px;
+    color: #f0ece2; line-height: 1.1;
+  }
+  .dark-card p { margin: 0; font-size: 13.5px; color: rgba(240,236,226,.55); line-height: 1.65; }
+
+  /* ── Results ── */
+  .results-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+    padding-top: 16px;
+  }
+  .result-item {}
+  .result-num {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(48px, 6vw, 88px); font-weight: 400; line-height: 1;
+    letter-spacing: -0.02em; color: var(--accent);
+  }
+  .result-label {
+    margin-top: 12px; font-size: 14px; color: var(--fg-soft); max-width: 28ch;
+  }
+  .result-label b { color: var(--fg); font-weight: 500; display: block; margin-bottom: 4px; }
+
+  /* ── Learnings ── */
+  .learnings {
+    max-width: 68ch; margin: 0 auto;
+    font-size: 15px; color: var(--fg-soft); line-height: 1.75;
+  }
+  .learnings p + p { margin-top: 1.5em; }
+
+  /* ── Next project ── */
+  .next {
+    display: block; padding: 80px var(--pad-x);
+    background: var(--bg-dark); color: #f0ece2;
+    position: relative; overflow: hidden;
+    transition: background .4s ease;
+  }
+  .next:hover { background: #1a1916; }
+  .next-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.3);
+    margin-bottom: 24px;
+  }
+  .next-title {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(36px, 5vw, 72px); font-weight: 400; line-height: 1;
+    letter-spacing: -0.02em; color: #f0ece2;
+  }
+  .next-arrow {
+    position: absolute; right: var(--pad-x); top: 50%; transform: translateY(-50%);
+    font-size: clamp(32px, 4vw, 56px); color: rgba(255,255,255,.2);
+    transition: transform .4s ease, color .4s ease;
+  }
+  .next:hover .next-arrow { transform: translateY(-50%) translateX(12px); color: rgba(255,255,255,.6); }
+
+  /* ── Reveals ── */
+  .rv { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .rv-d1 { transition-delay: .1s; }
+  .rv-d2 { transition-delay: .2s; }
+  .rv-d3 { transition-delay: .3s; }
+
+  /* ── Responsive ── */
+  @media (max-width: 860px) {
+    .intro { grid-template-columns: 1fr; gap: 40px; padding: 64px var(--pad-x); }
+    .section-head { grid-template-columns: 48px 1fr; gap: 16px; }
+    .process-list { grid-template-columns: 1fr; }
+    .process-item:nth-child(odd) { padding-right: 0; border-right: none; }
+    .process-item:nth-child(even) { padding-left: 0; }
+    .dark-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .img-grid-2 { grid-template-columns: 1fr; }
+    .img-grid-3 { grid-template-columns: 1fr; }
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+    .pull-quote { padding: 60px var(--pad-x); }
+  }
+
+  @media (max-width: 540px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .hero-meta { flex-direction: column; align-items: flex-start; }
+    .hero-tags { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Voltar
+    </a>
+    <span class="nav-id">01 / LavaLog Parking</span>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero" id="hero">
+    <div class="hero-meta">
+      <h1 class="hero-title">LavaLog<br>Parking</h1>
+      <div class="hero-tags">
+        <span>Site Institucional</span>
+        <span>Transporte · Logística</span>
+        <span>2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro rv">
+    <div class="intro-l">
+      <div class="intro-label">Visão geral do projeto</div>
+      <p class="intro-overview">
+        Redesign do site institucional, tornando-o a porta de entrada tanto para novos clientes quanto para o sistema de agendamento da LavaLog.
+      </p>
+      <a href="https://lavalog.com.br/" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; margin-top:28px; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); border-bottom:1px solid var(--fg); padding-bottom:4px; transition:opacity .2s ease;" onmouseenter="this.style.opacity='.5'" onmouseleave="this.style.opacity='1'">
+        Ver site ao vivo
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H3M10 1V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="intro-r">
+      <p class="intro-desc">
+        A LavaLog Parking é um estacionamento de caminhões com estrutura completa de descanso, segurança e serviços para motoristas. O site existia, mas não cumpria seu papel: não convertia visitantes em clientes e não servia como ponto de partida funcional para o sistema de agendamento interno. O projeto foi um redesign completo de comunicação, arquitetura de informação e fluxo de acesso ao portal.
+      </p>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Função</div>
+          <div class="meta-val">UX/UI Designer</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Ano</div>
+          <div class="meta-val">2025</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Tipo</div>
+          <div class="meta-val">Site Institucional</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Setor</div>
+          <div class="meta-val">Transporte · Logística</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Público</div>
+          <div class="meta-val">Pessoa física · Pessoa jurídica</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Ferramentas</div>
+          <div class="meta-val">Figma · Framer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contexto -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 01</div>
+      <h2 class="serif">O <span class="lo">contexto e o</span> desafio</h2>
+    </div>
+    <div class="process-list">
+      <div class="process-item">
+        <div class="process-n">01</div>
+        <div>
+          <h4>Site existente sem conversão</h4>
+          <p>O site da LavaLog existia, mas não cumpria seu papel estratégico: a comunicação era genérica, o design estava desatualizado e os visitantes não encontravam caminhos claros para agir, seja entrar em contato ou acessar o sistema de agendamento.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">02</div>
+        <div>
+          <h4>Dois públicos com jornadas distintas</h4>
+          <p>Motoristas autônomos (Pessoa Física) e gestores de frota (Pessoa Jurídica) chegam ao site com intenções diferentes. O site precisava identificar e guiar cada perfil com clareza desde o primeiro acesso.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">03</div>
+        <div>
+          <h4>Portal de agendamento desconectado</h4>
+          <p>O sistema de agendamento da LavaLog existia de forma isolada. Os clientes não sabiam como acessá-lo pelo site ou nem que ele existia. O redesign precisava tornar o site a entrada natural para esse portal.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">04</div>
+        <div>
+          <h4>Credibilidade e retenção de novos usuários</h4>
+          <p>Para quem nunca usou o estacionamento, o site era o único ponto de contato inicial. Ele precisava transmitir confiança, mostrar estrutura real e reduzir as barreiras de conversão para o primeiro agendamento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Processo dark -->
+  <section class="section dark rv">
+    <div class="section-head">
+      <div class="section-num light">§ 02</div>
+      <h2 class="serif"><span class="lo">Como eu</span> trabalhei</h2>
+    </div>
+    <div class="dark-grid">
+      <div class="dark-card">
+        <div class="dark-card-n">Descoberta · Entrevistas</div>
+        <h4>Conversas com clientes reais</h4>
+        <p>Entrevistei motoristas e gestores de frota que já usavam o estacionamento para entender como chegaram até lá, o que buscavam no site e onde o fluxo de acesso ao agendamento quebrava.</p>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-n">Descoberta · Avaliações</div>
+        <h4>Análise de avaliações online</h4>
+        <p>Levantei e analisei avaliações do Google e outras plataformas para identificar padrões de percepção: o que os clientes elogiavam, o que criticavam e o que repetidamente causava confusão ou frustração.</p>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-n">Descoberta · Benchmarking</div>
+        <h4>Referências do setor e além</h4>
+        <p>Mapeei concorrentes diretos e sites de referência em setores como hotelaria rodoviária e terminais logísticos, identificando padrões de navegação, linguagem visual e fluxos de acesso a sistemas de reserva.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solução -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 03</div>
+      <h2 class="serif">A <span class="lo">solução</span> desenhada</h2>
+    </div>
+    <p style="max-width:64ch; color:var(--fg-soft); font-size:15px; line-height:1.75; margin: 0 0 56px 80px;">
+      O site foi reestruturado com dois fluxos claros desde o primeiro acesso: <strong style="color:var(--fg); font-weight:500;">Pessoa Física</strong> e <strong style="color:var(--fg); font-weight:500;">Pessoa Jurídica</strong> — cada um com sua jornada de informação e seu acesso direto ao portal de agendamento. A identidade visual foi atualizada mantendo a essência da marca, com azul institucional, laranja para ações e fotografia real do espaço para transmitir credibilidade imediata.
+    </p>
+
+    <img src="Lavalog-Telas.png" alt="LavaLog Telas do projeto" class="rv" style="width:100%; height:auto; display:block;">
+  </section>
+
+  <!-- Imagens 2-col -->
+  <div class="rv" style="padding: 0 var(--pad-x); display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="height: clamp(280px, 38vw, 600px); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <img src="Tipografia.png" alt="Tipografia LavaLog" style="max-width:100%; max-height:100%; object-fit:contain; display:block;">
+    </div>
+    <div style="height: clamp(280px, 38vw, 600px); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <img src="Paletas-Lavalog.png" alt="Paletas LavaLog" style="max-width:100%; max-height:100%; object-fit:contain; display:block;">
+    </div>
+  </div>
+  <div class="img-caption">Tipografia e paleta de cores · identidade visual LavaLog</div>
+
+  <!-- Resultados -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 04</div>
+      <h2 class="serif">Resultados <span class="lo">&amp; impacto</span></h2>
+    </div>
+    <div class="results-grid">
+      <div class="result-item rv">
+        <div class="result-num">2×</div>
+        <div class="result-label">
+          <b>Fluxos de acesso segmentados</b>
+          Pessoa Física e Pessoa Jurídica com jornadas distintas e entrada direta ao portal de agendamento.
+        </div>
+      </div>
+      <div class="result-item rv rv-d1">
+        <div class="result-num">↑</div>
+        <div class="result-label">
+          <b>Conversão de novos usuários</b>
+          CTAs claros e hierarquia visual que reduzem o atrito entre a primeira visita e o primeiro agendamento.
+        </div>
+      </div>
+      <div class="result-item rv rv-d2">
+        <div class="result-num">→</div>
+        <div class="result-label">
+          <b>Portal integrado ao site</b>
+          O sistema de agendamento passou a ser acessado diretamente pelo site, eliminando a desconexão entre os dois canais.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next project -->
+  <a href="index.html" class="next">
+    <div class="next-label">Voltar ao portfólio</div>
+    <div class="next-title">Ver todos<br><em>os projetos →</em></div>
+    <span class="next-arrow">→</span>
+  </a>
+
+  <script>
+
+    // Reveals
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>

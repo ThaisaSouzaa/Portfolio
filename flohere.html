@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FloHere — Thaisa Souza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #fdfdfd;
+    --bg-dark: #111110;
+    --bg-soft: #f2f0eb;
+    --fg: #111110;
+    --fg-soft: #3a3530;
+    --muted: #7a6f5d;
+    --muted-2: #b6ab97;
+    --line: rgba(17,17,16,.10);
+    --hairline: rgba(17,17,16,.14);
+    --accent: #4a7c59;
+
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --pad-x: clamp(24px, 6vw, 96px);
+    --pad-x-wide: clamp(48px, 10vw, 160px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  ::selection { background: var(--fg); color: var(--bg); }
+
+  /* ── Nav ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px var(--pad-x);
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+  .nav-back {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: #fff;
+    transition: gap .3s ease;
+  }
+  .nav-back:hover { gap: 16px; }
+  .nav-id {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--bg-dark);
+    padding: 140px var(--pad-x) 72px;
+  }
+  .hero-meta {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 32px;
+  }
+  .hero-title {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(48px, 7vw, 108px);
+    font-weight: 400; line-height: .92;
+    letter-spacing: -0.02em; color: #fff; margin: 0;
+  }
+  .hero-tags {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;
+  }
+  .hero-tags span {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.7);
+    border: 1px solid rgba(255,255,255,.25); padding: 5px 10px;
+  }
+
+  /* ── Intro ── */
+  .intro {
+    padding: 96px var(--pad-x);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
+  }
+  .intro-overview {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.3; color: var(--fg); font-weight: 400; margin: 0;
+  }
+  .intro-link {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--fg);
+    border-bottom: 1px solid var(--fg); padding-bottom: 4px;
+    transition: opacity .2s ease;
+  }
+  .intro-link:hover { opacity: .5; }
+  .intro-r {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 32px;
+  }
+  .intro-desc {
+    font-size: 15px; color: var(--fg-soft); line-height: 1.75; max-width: 52ch;
+  }
+  .meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px;
+    padding-top: 32px; border-top: 1px solid var(--hairline);
+  }
+  .meta-label {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted-2); margin-bottom: 4px;
+  }
+  .meta-val { font-size: 13.5px; font-weight: 500; color: var(--fg); }
+
+  /* ── Seções ── */
+  .section {
+    padding: 96px var(--pad-x);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .section.dark {
+    background: var(--bg-dark);
+    border-bottom-color: rgba(255,255,255,.08);
+  }
+  .section.soft { background: var(--bg-soft); }
+  .section-head {
+    display: grid; grid-template-columns: 80px 1fr; gap: 32px;
+    margin-bottom: 56px; align-items: baseline;
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); padding-top: 8px;
+  }
+  .section-num.light { color: rgba(255,255,255,.35); }
+  .section h2 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.01em;
+  }
+  .section h2 .lo { font-style: normal; color: var(--muted); }
+  .section.dark h2 { color: #f0ece2; }
+  .section.dark h2 .lo { color: rgba(240,236,226,.35); }
+
+  /* ── Problema / Meta (2 col) ── */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    margin-left: 80px;
+  }
+  .two-col-item h3 {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 16px;
+  }
+  .two-col-item p {
+    font-size: 15px; color: var(--fg-soft); line-height: 1.75; margin: 0;
+  }
+  .two-col-item p strong { color: var(--fg); font-weight: 500; }
+
+  /* ── Process grid ── */
+  .process-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .process-item {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+    align-items: start;
+  }
+  .process-item:nth-child(odd)  { padding-right: 48px; border-right: 1px solid var(--hairline); }
+  .process-item:nth-child(even) { padding-left: 48px; }
+  .process-n {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted-2); padding-top: 6px;
+  }
+  .process-item h4 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px); font-weight: 400; margin: 0 0 10px; line-height: 1.1;
+  }
+  .process-item p { margin: 0; font-size: 14px; color: var(--fg-soft); line-height: 1.65; }
+
+  /* ── Dark cards ── */
+  .dark-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.08);
+  }
+  .dark-card { background: var(--bg-dark); padding: 36px 28px 32px; }
+  .dark-card-n {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 16px;
+  }
+  .dark-card h4 {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px); font-weight: 400; margin: 0 0 12px;
+    color: #f0ece2; line-height: 1.1;
+  }
+  .dark-card p { margin: 0; font-size: 13.5px; color: rgba(240,236,226,.55); line-height: 1.65; }
+
+  /* ── Usability results ── */
+  .results-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-left: 80px;
+  }
+  .result-col h3 {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 24px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--hairline);
+  }
+  .result-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .result-list li {
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font-size: 14px; color: var(--fg-soft); line-height: 1.6;
+  }
+  .result-list li span {
+    font-family: var(--mono); font-size: 10px; color: var(--accent);
+    padding-top: 3px; font-weight: 500;
+  }
+
+  /* ── Acessibilidade ── */
+  .access-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-left: 80px;
+  }
+  .access-item { }
+  .access-n {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  .access-item p { font-size: 14px; color: var(--fg-soft); line-height: 1.65; margin: 0; }
+
+  /* ── Impacto ── */
+  .impact-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+  }
+  .impact-num {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(48px, 6vw, 88px); font-weight: 400; line-height: 1;
+    letter-spacing: -0.02em; color: var(--accent);
+  }
+  .impact-label {
+    margin-top: 12px; font-size: 14px; color: var(--fg-soft); max-width: 28ch;
+  }
+  .impact-label b { color: var(--fg); font-weight: 500; display: block; margin-bottom: 4px; }
+
+  /* ── Placeholder ── */
+  .ph-img {
+    background:
+      repeating-linear-gradient(135deg, rgba(122,111,93,.12) 0 1px, transparent 1px 18px),
+      #eceae4;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ph-img .ph-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+    background: var(--bg); padding: 8px 14px;
+  }
+  .ph-img.dark-ph {
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 1px, transparent 1px 18px),
+      #1a1a18;
+  }
+  .ph-img.dark-ph .ph-label { background: #111110; color: rgba(255,255,255,.3); }
+
+  /* ── Phone mockup wrappers ── */
+  .phones-strip {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 16px; width: 100%; overflow: hidden;
+    background: #f0eee9; padding: 56px var(--pad-x) 0;
+  }
+  .phones-strip.dark-strip { background: #1a1916; }
+  .phone-slot {
+    flex-shrink: 0; overflow: hidden;
+    border-radius: 22px;
+  }
+  .phone-slot > div {
+    transform-origin: top left;
+  }
+
+  /* ── Img caption ── */
+  .img-caption {
+    padding: 14px var(--pad-x) 0;
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted-2);
+  }
+
+  /* ── Mockup 2 col ── */
+  .mockup-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .mockup-2 > div { height: clamp(280px, 38vw, 560px); display:flex; align-items:center; justify-content:center; }
+
+  /* ── Próximas etapas ── */
+  .steps-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--hairline); margin-left: 80px;
+  }
+  .step-item {
+    padding: 32px 0; border-bottom: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 36px 1fr; gap: 16px;
+  }
+  .step-item:nth-child(odd)  { padding-right: 48px; border-right: 1px solid var(--hairline); }
+  .step-item:nth-child(even) { padding-left: 48px; }
+  .step-n { font-family: var(--mono); font-size: 10px; color: var(--muted-2); padding-top: 4px; }
+  .step-item p { margin: 0; font-size: 14px; color: var(--fg-soft); line-height: 1.65; }
+
+  /* ── Next ── */
+  .next {
+    display: block; padding: 80px var(--pad-x);
+    background: var(--bg-dark); color: #f0ece2;
+    position: relative; overflow: hidden; transition: background .4s ease;
+  }
+  .next:hover { background: #1a1916; }
+  .next-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 24px;
+  }
+  .next-title {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(36px, 5vw, 72px); font-weight: 400; line-height: 1;
+    letter-spacing: -0.02em; color: #f0ece2;
+  }
+  .next-arrow {
+    position: absolute; right: var(--pad-x); top: 50%; transform: translateY(-50%);
+    font-size: clamp(32px, 4vw, 56px); color: rgba(255,255,255,.2);
+    transition: transform .4s ease, color .4s ease;
+  }
+  .next:hover .next-arrow { transform: translateY(-50%) translateX(12px); color: rgba(255,255,255,.6); }
+
+  /* ── Reveals ── */
+  .rv { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .rv-d1 { transition-delay: .1s; }
+  .rv-d2 { transition-delay: .2s; }
+
+  /* ── Responsive ── */
+  @media (max-width: 860px) {
+    .intro { grid-template-columns: 1fr; gap: 40px; padding: 64px var(--pad-x); }
+    .two-col { grid-template-columns: 1fr; margin-left: 0; }
+    .process-list { grid-template-columns: 1fr; }
+    .process-item:nth-child(odd)  { padding-right: 0; border-right: none; }
+    .process-item:nth-child(even) { padding-left: 0; }
+    .dark-grid { grid-template-columns: 1fr; }
+    .results-cols { grid-template-columns: 1fr; margin-left: 0; }
+    .access-grid { grid-template-columns: 1fr; margin-left: 0; }
+    .impact-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .mockup-2 { grid-template-columns: 1fr; }
+    .steps-list { grid-template-columns: 1fr; margin-left: 0; }
+    .step-item:nth-child(odd)  { padding-right: 0; border-right: none; }
+    .step-item:nth-child(even) { padding-left: 0; }
+    .section-head { grid-template-columns: 48px 1fr; gap: 16px; }
+    .hero-meta { flex-direction: column; align-items: flex-start; }
+    .hero-tags { align-items: flex-start; }
+  }
+  @media (max-width: 540px) {
+    .impact-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Voltar
+    </a>
+    <span class="nav-id">02 / FloHere</span>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero" id="hero">
+    <div class="hero-meta">
+      <h1 class="hero-title">FloHere</h1>
+      <div class="hero-tags">
+        <span>UX Design · Mobile App</span>
+        <span>Floricultura · E-commerce</span>
+        <span>2022 — 2023</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro rv">
+    <div class="intro-l">
+      <div class="intro-label">Visão geral do projeto</div>
+      <p class="intro-overview">
+        Aplicativo de vendas e entrega de arranjos florais, buques e cestas de presentes — do zero à entrega, em 7 meses.
+      </p>
+    </div>
+    <div class="intro-r">
+      <p class="intro-desc">
+        O FloHere surgiu da dificuldade real de encontrar variedade em flores e arranjos sem precisar sair de casa. O projeto percorreu todas as etapas do processo de UX: pesquisa com usuários, wireframes, prototipagem e dois ciclos de estudos de usabilidade até chegar a um fluxo de compra simples e eficiente.
+      </p>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Função</div>
+          <div class="meta-val">UX Designer</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Duração</div>
+          <div class="meta-val">Out 2022 — Mai 2023</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Tipo</div>
+          <div class="meta-val">Aplicativo Mobile</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Setor</div>
+          <div class="meta-val">Floricultura · E-commerce</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Público-alvo</div>
+          <div class="meta-val">18 a 50 anos</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Ferramentas</div>
+          <div class="meta-val">Figma</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cover mockup full — phones rendered by React -->
+  <div id="mount-cover" class="phones-strip rv" style="min-height:540px;"></div>
+
+  <!-- Problema & Meta -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 01</div>
+      <h2><span class="lo">O problema</span> e a meta</h2>
+    </div>
+    <div class="two-col">
+      <div class="two-col-item">
+        <h3>O problema</h3>
+        <p>Pessoas não conseguem encontrar <strong>grande variedade de arranjos florais</strong> nos canais disponíveis. Além disso, têm dificuldade em armazenar flores e não têm tempo para se deslocar até uma floricultura física.</p>
+      </div>
+      <div class="two-col-item">
+        <h3>A meta</h3>
+        <p>Criar um aplicativo que <strong>possibilite a compra de flores e entregue em qualquer lugar</strong>, resolvendo as três principais barreiras: variedade, logística e conveniência.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pesquisa com usuários -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 02</div>
+      <h2><span class="lo">Entendendo</span> o usuário</h2>
+    </div>
+    <div class="process-list">
+      <div class="process-item">
+        <div class="process-n">01</div>
+        <div>
+          <h4>Entrevistas individuais</h4>
+          <p>Foram realizadas entrevistas com usuários entre 18 e 50 anos. As conversas revelaram três dores principais: falta de variedade, falta de tempo para ir à floricultura e dificuldade em armazenar os arranjos comprados.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">02</div>
+        <div>
+          <h4>Perfil: Ana Maria</h4>
+          <p>Cerimonialista especializada em casamentos e formaturas. Tem dificuldade em encontrar arranjos em grande quantidade para decorar eventos. O FloHere permitiria que ela pedisse em escala e solicitasse entrega direto no local.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">03</div>
+        <div>
+          <h4>Aspectos problemáticos identificados</h4>
+          <p>Três barreiras centrais mapeadas: <strong style="color:var(--fg);font-weight:500;">variedade</strong> — falta de opções além do básico; <strong style="color:var(--fg);font-weight:500;">tempo</strong> — sem disponibilidade para se locomover; <strong style="color:var(--fg);font-weight:500;">armazenamento</strong> — arranjos comprados para surpresas futuras acabam se perdendo.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-n">04</div>
+        <div>
+          <h4>Mapa da jornada do usuário</h4>
+          <p>O mapa revelou que Ana precisava de um canal centralizado para pedir em grande quantidade, com entrega no local do evento — eliminando a logística de transporte e o risco de danificar os arranjos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wireframes — onboarding e busca por categoria -->
+  <div class="mockup-2 rv">
+    <div id="mount-w1" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+    <div id="mount-w2" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+  </div>
+  <div class="img-caption">Fluxo de descoberta — tela de boas-vindas e busca por categoria</div>
+
+  <!-- Design process dark -->
+  <section class="section dark rv">
+    <div class="section-head">
+      <div class="section-num light">§ 03</div>
+      <h2><span class="lo">Iniciando</span> o design</h2>
+    </div>
+    <div class="dark-grid">
+      <div class="dark-card">
+        <div class="dark-card-n">Etapa 01 · Wireframes de papel</div>
+        <h4>Fluxo de compra priorizado</h4>
+        <p>Os wireframes em papel focaram no fluxo de compra end-to-end. Esse exercício foi fundamental para identificar as melhores escolhas antes de partir para o digital.</p>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-n">Etapa 02 · Wireframes digitais</div>
+        <h4>Baseados em pesquisa e feedback</h4>
+        <p>Os designs digitais foram construídos a partir dos dados da pesquisa. Um dos destaques foi a possibilidade de selecionar itens individuais do carrinho — necessidade mapeada nas entrevistas.</p>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-n">Etapa 03 · Protótipo lo-fi</div>
+        <h4>Validação antes de investir em visual</h4>
+        <p>Um protótipo de baixa fidelidade foi construído a partir dos wireframes digitais para validar o fluxo com usuários reais antes de avançar para o visual final.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hi-fi screens: home e sacola -->
+  <div class="mockup-2 rv">
+    <div id="mount-d1" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+    <div id="mount-d2" style="height:clamp(300px,40vw,600px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden;"></div>
+  </div>
+  <div class="img-caption">Telas do aplicativo — feed inicial e sacola de compras</div>
+
+  <!-- Estudos de usabilidade -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 04</div>
+      <h2>Estudos de <span class="lo">usabilidade</span></h2>
+    </div>
+    <p style="margin: 0 0 48px 80px; font-size:15px; color:var(--fg-soft); line-height:1.75; max-width:60ch;">
+      Foram realizados dois ciclos de testes: o primeiro com o protótipo lo-fi, para detectar problemas estruturais; o segundo com o hi-fi, para refinar detalhes de interface e fluxo de compra.
+    </p>
+    <div class="results-cols">
+      <div class="result-col">
+        <h3>Rodada 01 · Lo-fi</h3>
+        <ul class="result-list">
+          <li><span>01</span> Usuários querem mais variedade de arranjos e flores disponíveis</li>
+          <li><span>02</span> Preferem comprar sem precisar sair de casa ou se locomover</li>
+          <li><span>03</span> Querem receber os pedidos em qualquer endereço</li>
+        </ul>
+      </div>
+      <div class="result-col">
+        <h3>Rodada 02 · Hi-fi</h3>
+        <ul class="result-list">
+          <li><span>01</span> A etapa de finalização de compra precisa ser mais bem estruturada</li>
+          <li><span>02</span> Alguns elementos visuais são confusos e precisam de revisão</li>
+          <li><span>03</span> Endereço de entrega deve ser visível no resumo do carrinho</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hi-fi strip: fluxo de compra completo -->
+  <div id="mount-hifi" class="phones-strip rv" style="min-height:540px;"></div>
+  <div class="img-caption">Protótipo de alta fidelidade — fluxo builder, sacola, entrega, pagamento e confirmação</div>
+
+  <!-- Modelos antes/depois -->
+  <section class="section soft rv">
+    <div class="section-head">
+      <div class="section-num">§ 05</div>
+      <h2><span class="lo">Aperfeiçoando</span> o design</h2>
+    </div>
+    <div class="mockup-2">
+      <div style="padding: 0 32px 0 0;">
+        <div id="mount-before" style="width:100%; height:clamp(300px,36vw,560px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; margin-bottom:16px; border-radius:4px;"></div>
+        <p style="font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2);">Protótipo lo-fi — estrutura de navegação</p>
+      </div>
+      <div style="padding: 0 0 0 32px; border-left: 1px solid var(--hairline);">
+        <div id="mount-after" style="width:100%; height:clamp(300px,36vw,560px); display:flex; align-items:center; justify-content:center; background:#f0eee9; overflow:hidden; margin-bottom:16px; border-radius:4px;"></div>
+        <p style="font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2);">Hi-fi final — visual refinado pós estudo</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Acessibilidade -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 06</div>
+      <h2>Considerações de <span class="lo">acessibilidade</span></h2>
+    </div>
+    <div class="access-grid">
+      <div class="access-item">
+        <div class="access-n">01 · Iconografia</div>
+        <p>Os ícones utilizados são de conhecimento comum, evitando que os usuários tenham dificuldade em navegar pelo app sem precisar de legendas.</p>
+      </div>
+      <div class="access-item">
+        <div class="access-n">02 · Recurso de áudio</div>
+        <p>O aplicativo conta com suporte a leitura em áudio para pessoas com deficiência visual, garantindo autonomia na experiência de compra.</p>
+      </div>
+      <div class="access-item">
+        <div class="access-n">03 · Imagens detalhadas</div>
+        <p>As fotos dos arranjos são detalhadas e fiéis ao produto, para que os usuários não sejam surpreendidos negativamente no momento da entrega.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impacto -->
+  <section class="section rv">
+    <div class="section-head">
+      <div class="section-num">§ 07</div>
+      <h2>Impacto <span class="lo">e resultado</span></h2>
+    </div>
+    <div class="impact-grid">
+      <div class="rv">
+        <div class="impact-num">2</div>
+        <div class="impact-label">
+          <b>Ciclos de usabilidade</b>
+          Lo-fi e hi-fi testados com usuários reais, gerando iterações concretas a cada rodada.
+        </div>
+      </div>
+      <div class="rv rv-d1">
+        <div class="impact-num">↑</div>
+        <div class="impact-label">
+          <b>Vontade de comprar</b>
+          Usuários relataram maior disposição para repetir compras pela facilidade do fluxo.
+        </div>
+      </div>
+      <div class="rv rv-d2">
+        <div class="impact-num">3×</div>
+        <div class="impact-label">
+          <b>Barreiras eliminadas</b>
+          Variedade, logística e conveniência resolvidas em um único fluxo de compra.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Próximas etapas -->
+  <section class="section soft rv">
+    <div class="section-head">
+      <div class="section-num">§ 08</div>
+      <h2>Próximas <span class="lo">etapas</span></h2>
+    </div>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-n">01</div>
+        <p>Realizar um terceiro estudo de usabilidade para aumentar a confiança nos elementos de design e validar as iterações feitas após o hi-fi.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-n">02</div>
+        <p>Aprofundar a pesquisa com usuários para identificar novas necessidades e oportunidades de melhoria no aplicativo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Voltar ao portfólio -->
+  <a href="index.html" class="next">
+    <div class="next-label">Voltar ao portfólio</div>
+    <div class="next-title">Ver todos<br><em>os projetos →</em></div>
+    <span class="next-arrow">→</span>
+  </a>
+
+  <script>
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  </script>
+
+  <!-- FloHere screen components -->
+  <script type="text/babel" src="flohere-shared.jsx"></script>
+  <script type="text/babel" src="flohere-screens-discover.jsx"></script>
+  <script type="text/babel" src="flohere-screens-customize.jsx"></script>
+  <script type="text/babel" src="flohere-screens-checkout.jsx"></script>
+
+  <!-- Mount phone mockups into placeholders -->
+  <script type="text/babel">
+    const TWEAK = { palette: 'sage', dark: false, font: 'Manrope', display: 'serif' };
+
+    // Helper: render a scaled phone into a container element
+    function ScaledPhone({ Screen, scale }) {
+      const W = 360, H = 780;
+      return (
+        <div style={{ width: W * scale, height: H * scale, flexShrink: 0, borderRadius: 22, overflow: 'hidden' }}>
+          <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: W, height: H }}>
+            <Screen tweak={TWEAK} />
+          </div>
+        </div>
+      );
+    }
+
+    // Helper: mount a strip of phones into a container
+    function mountStrip(id, screens, scale) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const root = ReactDOM.createRoot(el);
+      root.render(
+        <React.Fragment>
+          {screens.map((S, i) => <ScaledPhone key={i} Screen={S} scale={scale} />)}
+        </React.Fragment>
+      );
+    }
+
+    // Helper: mount a single phone into a container with auto-computed scale
+    function mountPhone(id, Screen) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const availH = el.offsetHeight || 520;
+      const scale = Math.min(availH / 780, 0.82);
+      const root = ReactDOM.createRoot(el);
+      root.render(<ScaledPhone Screen={Screen} scale={scale} />);
+    }
+
+    // Wait for fonts + layout to settle before computing heights
+    document.fonts.ready.then(() => {
+      // ── Cover strip (5 screens, scale 0.68) ──────────────────
+      mountStrip('mount-cover', [
+        ScreenOnboarding, ScreenFeed, ScreenProduct, ScreenBuilder, ScreenConfirmation
+      ], 0.68);
+
+      // ── Research pair (§02) ──────────────────────────────────
+      mountPhone('mount-w1', ScreenOnboarding);
+      mountPhone('mount-w2', ScreenSearch);
+
+      // ── Design process pair (§03) ────────────────────────────
+      mountPhone('mount-d1', ScreenFeed);
+      mountPhone('mount-d2', ScreenCart);
+
+      // ── Hi-fi strip (§04 — checkout flow, scale 0.65) ────────
+      mountStrip('mount-hifi', [
+        ScreenProduct, ScreenBuilder, ScreenCart, ScreenAddress, ScreenPayment, ScreenTracking
+      ], 0.65);
+
+      // ── Before / After (§05) ─────────────────────────────────
+      mountPhone('mount-before', ScreenLogin);
+      mountPhone('mount-after', ScreenProduct);
+    });
+  </script>
+</body>
+</html>

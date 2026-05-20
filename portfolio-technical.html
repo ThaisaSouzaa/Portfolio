@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thaisa Souza — UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="image-slot.js"></script>
+
+<style>
+  :root {
+    /* Palette */
+    --bg: #fdfdfd;
+    --bg-2: #efece5;
+    --fg: #1a1a1a;
+    --fg-soft: #3a3530;
+    --muted: #7a6f5d;
+    --muted-2: #b6ab97;
+    --line: rgba(26,26,26,.10);
+    --hairline: rgba(26,26,26,.18);
+
+    /* Type */
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    /* Scale — smaller, technical */
+    --t-display: clamp(56px, 9vw, 168px);
+    --t-h2: clamp(28px, 3vw, 48px);
+    --t-h3: clamp(20px, 1.6vw, 26px);
+    --t-body: 15px;
+    --t-small: 12.5px;
+    --t-mono: 10.5px;
+
+    /* Layout */
+    --pad-x: clamp(20px, 3.6vw, 56px);
+    --gap-section: clamp(120px, 16vh, 200px);
+    --gap-row: 28px;
+    --leading: 1.5;
+    --grid-cols: 12;
+  }
+
+  html, body { margin:0; padding:0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: var(--t-body);
+    line-height: var(--leading);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  body.dark {
+    --bg: #0c0c0a;
+    --bg-2: #131310;
+    --fg: #f0ece2;
+    --fg-soft: #c8c2b3;
+    --muted: #7a7464;
+    --muted-2: #3a352d;
+    --line: rgba(240,236,226,.10);
+    --hairline: rgba(240,236,226,.20);
+  }
+  body.dense { --pad-x: clamp(16px,2.4vw,36px); --gap-section: clamp(90px,12vh,140px); --t-body:14px; }
+  body.comfy { --pad-x: clamp(28px,5vw,84px); --gap-section: clamp(160px,22vh,260px); --gap-row: 40px; --t-body:16px; }
+
+  body.font-serif-display .serif { font-family: var(--serif); }
+  body.font-mono-display .serif  { font-family: var(--mono); font-weight: 400; letter-spacing: -0.02em; font-style: normal; }
+  body.font-mono-display .serif em { font-style: normal; opacity: .55; }
+
+  ::selection { background: var(--fg); color: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+
+  /* Cursor */
+  .cur-dot, .cur-ring {
+    position: fixed; top:0; left:0; pointer-events: none; z-index: 9999;
+    border-radius: 999px; mix-blend-mode: difference;
+    transition: width .25s ease, height .25s ease;
+  }
+  .cur-dot { width: 5px; height: 5px; background:#fff; transform: translate(-50%,-50%); }
+  .cur-ring { width: 28px; height: 28px; border:1px solid rgba(255,255,255,.55); transform: translate(-50%,-50%); }
+  body.hov-link .cur-ring { width: 64px; height:64px; }
+  body.hov-img  .cur-ring { width: 96px; height:96px; border-color: rgba(255,255,255,.9); }
+  body.hov-img .cur-dot::after {
+    content: "VIEW"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-family: var(--mono); font-size: 9px; letter-spacing: .14em; color: rgba(255,255,255,.0);
+  }
+  @media (pointer:coarse) { body { cursor: auto; } .cur-dot, .cur-ring { display:none; } }
+
+  /* Global grid lines (decorative) */
+  .frame {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to right, var(--line) 1px, transparent 1px);
+    background-size: 1px 100%, 1px 100%;
+    background-position: var(--pad-x) 0, calc(100% - var(--pad-x)) 0;
+    background-repeat: no-repeat;
+  }
+
+  /* Top bar */
+  .top {
+    position: fixed; top:0; left:0; right:0; z-index: 50;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;
+    padding: 16px var(--pad-x);
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase;
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+  .top .left { display:flex; gap: 28px; }
+  .top .center { text-align: center; color: rgba(255,255,255,.7); }
+  .top .right { text-align: right; display: flex; justify-content: flex-end; gap: 22px; }
+  .top a { position: relative; }
+  .top a::before { content:""; position:absolute; left:0; bottom:-3px; width: 0; height:1px; background:#fff; transition: width .35s ease; }
+  .top a:hover::before { width: 100%; }
+
+  /* Page padding */
+  .px { padding-left: var(--pad-x); padding-right: var(--pad-x); }
+  section { position: relative; z-index: 2; }
+
+  /* Hero — asymmetric */
+  .hero {
+    min-height: 100vh; display: grid;
+    grid-template-columns: 1fr 4fr 3fr 2fr 1fr;
+    grid-template-rows: 1fr auto auto 1fr;
+    column-gap: 32px; row-gap: 24px;
+    padding: 120px var(--pad-x) 48px;
+  }
+  .h-mark { grid-column: 2 / -2; grid-row: 1; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); align-self: start; padding-top: 24px;}
+  .h-mark span { color: var(--fg); }
+  .h-title {
+    grid-column: 2 / 4; grid-row: 2;
+    font-family: var(--serif); font-weight: 400; font-style: italic;
+    font-size: var(--t-display); line-height: .9; letter-spacing: -0.02em; margin:0;
+  }
+  .h-portrait {
+    grid-column: 4 / 5; grid-row: 2;
+    width: clamp(160px, 18vw, 240px);
+    height: clamp(160px, 18vw, 240px);
+    justify-self: end; align-self: end;
+    margin-bottom: 8px;
+  }
+  .h-title .lo { font-style: normal; color: var(--muted); }
+  .h-bio {
+    grid-column: 3 / 5; grid-row: 3;
+    align-self: end; max-width: 44ch; justify-self: end;
+    font-size: clamp(15px, 1.1vw, 17px); color: var(--fg-soft);
+  }
+  .h-id {
+    grid-column: 2; grid-row: 3; align-self: end;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 28px;
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  .h-id b { color: var(--fg); font-family: var(--sans); font-size: 13px; letter-spacing: 0; text-transform: none; display:block; font-weight: 500; margin-top: 4px; }
+  .h-foot { grid-column: 2 / -2; grid-row: 4; display:flex; justify-content: space-between; align-items: end; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-bottom: 16px;}
+  .h-foot .blink { display: inline-flex; align-items: center; gap: 8px; color: var(--fg); }
+  .h-foot .blink::before { content:""; width:6px; height:6px; background: #5fb265; border-radius: 999px; animation: blink 1.8s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+
+  /* Section header */
+  .sec {
+    padding-top: var(--gap-section);
+    display: grid;
+    grid-template-columns: 1fr 11fr;
+    gap: 32px;
+  }
+  .sec-l { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 8px; }
+  .sec-r { display: contents; }
+  .sec h2 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: var(--t-h2); margin: 0 0 56px; letter-spacing: -0.01em;
+  }
+  .sec h2 .lo { color: var(--muted); font-style: normal; }
+  .sec-divider {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--hairline);
+    padding-top: 18px;
+    display: grid; grid-template-columns: 1fr 11fr; gap: 32px;
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 36px;
+  }
+
+  /* Work — 2x2 grid */
+  .work {
+    grid-column: 2;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px 28px;
+  }
+  .card {
+    position: relative; aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--bg-2);
+    transition: transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .card:nth-child(2) { transform: translateY(64px); }
+  .card:nth-child(3) { transform: translateY(-32px); }
+  .card:nth-child(4) { transform: translateY(32px); }
+  .card .ph { position: absolute; inset: 0; }
+  .card-h {
+    position: absolute; left: 0; right: 0; top: 0;
+    padding: 16px 18px;
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); z-index: 2;
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--bg) 88%, transparent), transparent);
+  }
+  .card-b {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 18px 18px 20px;
+    z-index: 2;
+    background: linear-gradient(to top, color-mix(in oklab, var(--bg) 96%, transparent) 40%, transparent);
+  }
+  .card-b .ttl { font-family: var(--serif); font-size: clamp(22px, 2vw, 30px); line-height: 1.05; font-weight: 400; }
+  .card-b .ttl em { font-style: italic; color: var(--muted); }
+  .card-b .sub { margin-top: 6px; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .card .reveal {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 22px 18px;
+    background: var(--fg); color: var(--bg);
+    transform: translateY(100%); transition: transform .55s cubic-bezier(.2,.7,.2,1);
+    font-size: 14px;
+    z-index: 3;
+  }
+  .card:hover .reveal { transform: translateY(0); }
+  .card .reveal .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .card .reveal .row b { display:block; font-family: var(--sans); font-weight: 500; font-size: 13px; margin-top: 4px; }
+  .card .reveal .row span { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted-2); }
+
+  /* Placeholder ph */
+  .ph {
+    background:
+      repeating-linear-gradient(135deg, var(--muted-2) 0 1px, transparent 1px 14px),
+      var(--bg-2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ph .ph-cap {
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); background: var(--bg); padding: 6px 10px;
+  }
+
+  /* Experiências — index table */
+  .proc {
+    grid-column: 2;
+    border-top: 1px solid var(--hairline);
+  }
+  .proc-row {
+    display: grid; grid-template-columns: 64px 1fr 2.2fr 1.4fr;
+    gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: padding-left .4s ease, background .3s ease;
+  }
+  .proc-row:hover { padding-left: 12px; }
+  .proc-row .n { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 6px; }
+  .proc-row h4 { font-family: var(--serif); font-style: italic; font-size: clamp(22px, 1.8vw, 28px); font-weight: 400; margin: 0; line-height: 1.1; }
+  .proc-row p { margin: 0; color: var(--fg-soft); max-width: 56ch; }
+  .proc-row .out { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); align-self: end; padding-top: 16px;}
+  .proc-row .out b { display:block; font-family: var(--sans); font-weight: 500; color: var(--fg); font-size: 13px; letter-spacing: 0; text-transform: none; margin-top: 4px; }
+
+  /* Experience — year-indexed */
+  .exp { grid-column: 2; border-top: 1px solid var(--hairline); }
+  .exp-row {
+    display: grid; grid-template-columns: 110px 2fr 2fr 110px 24px;
+    gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--line);
+    align-items: baseline;
+    transition: padding-left .4s ease;
+  }
+  .exp-row:hover { padding-left: 12px; }
+  .exp-row .yr { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; color: var(--muted); }
+  .exp-row .nm { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 1.6vw, 26px); }
+  .exp-row .nm.lo { font-style: normal; color: var(--muted); }
+  .exp-row .rl { color: var(--fg-soft); font-size: 14px; }
+  .exp-row .ar { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: right; }
+  .exp-row .ar2 { font-family: var(--mono); font-size: var(--t-mono); color: var(--muted); text-align: right; }
+
+  /* Footer */
+  footer {
+    margin-top: var(--gap-section);
+    padding: 120px var(--pad-x) 36px;
+    background: var(--bg-2);
+    position: relative; z-index: 2;
+  }
+  .foot-grid {
+    display: grid; grid-template-columns: 1fr 11fr; gap: 32px;
+  }
+  .foot-mark { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .foot-main {
+    display: grid; grid-template-columns: 3fr 1fr 1fr 1fr; gap: 40px;
+  }
+  .foot-mail {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(40px, 5vw, 88px); line-height: 1; letter-spacing: -0.02em;
+    display: inline-block; position: relative;
+  }
+  .foot-mail .lo { font-style: normal; color: var(--muted); }
+  .foot-mail::after {
+    content:"→"; margin-left: 0.2em; font-style: normal; color: var(--muted);
+    display: inline-block; transition: transform .35s ease;
+  }
+  .foot-mail:hover::after { transform: translateX(12px); }
+  .foot-col h5 { font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 400; }
+  .foot-col a, .foot-col b { display: block; font-weight: 500; font-size: 14px; }
+  .foot-col a { padding: 4px 0; }
+  .foot-col a span { color: var(--muted); }
+  .foot-end {
+    margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 1fr 11fr; gap: 32px;
+  }
+  .foot-end-r { display: flex; justify-content: space-between; font-family: var(--mono); font-size: var(--t-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  /* Reveals */
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .rv-d1 { transition-delay: .08s; }
+  .rv-d2 { transition-delay: .16s; }
+  .rv-d3 { transition-delay: .24s; }
+  .rv-d4 { transition-delay: .32s; }
+
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto auto auto auto 1fr; }
+    .h-mark     { grid-column: 1 / -1; grid-row: 1; }
+    .h-portrait { grid-column: 1 / -1; grid-row: 2; width: 140px; height: 140px; justify-self: start; align-self: start; }
+    .h-title    { grid-column: 1 / -1; grid-row: 3; }
+    .h-id       { grid-column: 1 / -1; grid-row: 4; align-self: start; }
+    .h-bio      { grid-column: 1 / -1; grid-row: 5; align-self: start; justify-self: start; }
+    .h-foot     { grid-column: 1 / -1; grid-row: 6; }
+    .sec { grid-template-columns: 1fr; }
+    .work, .proc, .exp { grid-column: 1; }
+    .card:nth-child(n) { transform: none !important; }
+    .work { grid-template-columns: 1fr; }
+    .proc-row { grid-template-columns: 48px 1fr; gap: 12px; }
+    .proc-row p, .proc-row .out { grid-column: 1 / -1; padding-left: 60px; }
+    .exp-row { grid-template-columns: 70px 1fr 1fr; gap: 12px; }
+    .exp-row .ar, .exp-row .ar2 { display: none; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .foot-main { grid-template-columns: 1fr; gap: 28px; }
+    .top { grid-template-columns: 1fr 1fr; }
+    .top .center { display: none; }
+  }
+</style>
+</head>
+<body class="font-serif-display">
+
+  <div class="cur-ring" id="curRing"></div>
+  <div class="cur-dot" id="curDot"></div>
+  <div class="frame" aria-hidden="true"></div>
+
+  <!-- Top bar -->
+  <nav class="top">
+    <div class="left">
+      <a href="#top">Index ↩</a>
+      <a href="#work">Work</a>
+      <a href="#experiencias">Experiências</a>
+      <a href="#clientes">Clientes</a>
+    </div>
+    <div class="center">T·S / portfolio · v.01 · 2026</div>
+    <div class="right">
+      <span>SP 00:00</span>
+      <a href="#contact">Contato ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="top" class="hero">
+    <div class="h-mark rv">— Index <span>/ 01 of 04</span> · Designer independente, desde 2024</div>
+
+    <h1 class="h-title serif rv rv-d1" style="font-size: 90px;">
+      <span style="color: #ff8a00;">Thaisa Souza</span><br>
+      <span class="lo" style="font-size: 80px;">— designer brasileira apaixonada por criar experiências digitais que funcionam.</span>
+    </h1>
+
+    <image-slot
+      id="portrait"
+      class="h-portrait rv rv-d1"
+      shape="circle"
+      placeholder="Drop portrait"
+    ></image-slot>
+
+    <div class="h-id rv rv-d2">
+      <div>Cargo<b>UX/UI Designer e Product Designer JR</b></div>
+      <div>De<b>Santos — São Paulo</b></div>
+      <div>Foco<b>Portuário · Logística · ESG</b></div>
+    </div>
+
+    <p class="h-bio rv rv-d2">
+      Um ano imersa em produtos digitais de alta complexidade nos setores portuário,
+      logístico e ESG — conectando pesquisa com usuários, prototipação e Design System
+      para criar experiências que funcionam de verdade. Aberta a novas oportunidades.
+    </p>
+
+    <div class="h-foot rv rv-d3">
+      <span class="blink"></span>
+      <span>↓ Scroll · 04 sections</span>
+      <span>Last updated · 19 May 2026</span>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="sec px">
+      <div class="sec-l">§ 01</div>
+      <div>
+        <h2 class="serif">Projetos </h2>
+
+        <div class="sec-divider">
+          <div>Index</div>
+          <div style="display:grid; grid-template-columns: 2fr 2fr 1.4fr 1fr; gap: 24px;">
+            <span>Projeto</span><span>Setor</span><span>Ano</span><span style="text-align:right;">Resultado</span>
+          </div>
+        </div>
+
+        <div class="work">
+          <article class="card rv" onclick="location.href='lavalog.html'" style="cursor:pointer;">
+            <img src="lavalog-cover.png" alt="LavaLog Parking" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+            <div class="card-h"><span>01 · LavaLog Parking</span><span>2025</span></div>
+            <div class="card-b">
+              <div class="ttl serif">Site institucional para <em>estacionamento</em> de caminhões</div>
+              <div class="sub">Transporte · UX/UI Designer · Site institucional</div>
+            </div>
+            <div class="reveal">
+              Projeto de site institucional para a LavaLog Parking — comunicando segurança, conforto e estrutura para motoristas de caminhão em trânsito.
+              <div class="row">
+                <div><span>Tipo</span><b>Site Institucional</b></div>
+                <div><span>Setor</span><b>Transporte / Logística</b></div>
+                <div><span>Entrega</span><b>Design completo</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv rv-d1" onclick="location.href='flohere.html'" style="cursor:pointer;">
+            <div class="ph"><span class="ph-cap">replace · telas do app FloHere</span></div>
+            <div class="card-h"><span>02 · FloHere</span><span>2022—2023</span></div>
+            <div class="card-b">
+              <div class="ttl serif">App de <em>floricultura</em> para compras online</div>
+              <div class="sub">Floricultura · UX Designer · App Mobile</div>
+            </div>
+            <div class="reveal">
+              Aplicativo mobile de e-commerce para floriculturas, desenhado do zero com foco em acessibilidade e facilidade de compra.
+              <div class="row">
+                <div><span>Tipo</span><b>App Mobile</b></div>
+                <div><span>Setor</span><b>Floricultura / E-commerce</b></div>
+                <div><span>Resultado</span><b>↑ vontade de comprar</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv rv-d2">
+            <div class="ph"><span class="ph-cap">replace · fluxo de checkout</span></div>
+            <div class="card-h"><span>03 · Atelier Norte</span><span>2024</span></div>
+            <div class="card-b">
+              <div class="ttl serif">Checkout que <em>prende</em> a atenção</div>
+              <div class="sub">Moda / e-commerce · Design lead · 4 mo.</div>
+            </div>
+            <div class="reveal">
+              Checkout em uma tela para uma casa de moda brasileira, construído em torno do seu patrimônio visual.
+              <div class="row">
+                <div><span>Role</span><b>Design lead</b></div>
+                <div><span>Team</span><b>1 PM · 3 eng</b></div>
+                <div><span>Resultado</span><b>+22% conv. mobile</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv rv-d3">
+            <div class="ph"><span class="ph-cap">replace · biblioteca de componentes</span></div>
+            <div class="card-h"><span>04 · Pier Systems</span><span>2023→</span></div>
+            <div class="card-b">
+              <div class="ttl serif">Um design system para <em>110</em> engenheiros</div>
+              <div class="sub">Interno · Founding designer · em andamento</div>
+            </div>
+            <div class="reveal">
+              Criou, nomeou e escalou um sistema interno para 14 times de produto.
+              <div class="row">
+                <div><span>Role</span><b>Founding designer</b></div>
+                <div><span>Team</span><b>1 dx · 1 writer</b></div>
+                <div><span>Resultado</span><b>84% adoção</b></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experiências -->
+  <section id="experiencias">
+    <div class="sec px">
+      <div class="sec-l">§ 02</div>
+      <div>
+        <h2 class="serif"><span class="lo">Onde eu</span> aprendi</h2>
+
+        <div class="sec-divider">
+          <div>Index</div>
+          <div style="display:grid; grid-template-columns: 1fr 2fr 2.4fr 1fr; gap: 24px;">
+            <span>Período</span><span>Empresa</span><span>Cargo</span><span style="text-align:right;">Setor</span>
+          </div>
+        </div>
+
+        <div class="proc">
+          <div class="proc-row rv" style="grid-template-columns: 110px 1.4fr 2.4fr 1fr;">
+            <span class="n">2025–26</span>
+            <h4 class="serif">Companhia das Docas</h4>
+            <p><b style="font-family:var(--sans); font-weight:500; color:var(--fg);">UX/UI Designer · Product Design JR</b><br>
+            Sistema operacional portuário: pesquisa com operadores, prototipação de fluxos críticos e contribuições ao Design System interno.</p>
+            <div class="out" style="text-align:right;">Setor<b>Portuário</b></div>
+          </div>
+
+          <div class="proc-row rv rv-d1" style="grid-template-columns: 110px 1.4fr 2.4fr 1fr;">
+            <span class="n">2024–25</span>
+            <h4 class="serif">Verde Logística</h4>
+            <p><b style="font-family:var(--sans); font-weight:500; color:var(--fg);">UX Designer · freelance</b><br>
+            Plataforma de rastreabilidade de cadeias logísticas com foco em relatórios ESG — da pesquisa com gestores à entrega das interfaces.</p>
+            <div class="out" style="text-align:right;">Setor<b>Logística · ESG</b></div>
+          </div>
+
+          <div class="proc-row rv rv-d2" style="grid-template-columns: 110px 1.4fr 2.4fr 1fr;">
+            <span class="n">2024</span>
+            <h4 class="serif">Estudúdio</h4>
+            <p><b style="font-family:var(--sans); font-weight:500; color:var(--fg);">Estágio em design de produto</b><br>
+            Apoio a projetos clientes em discovery, wireframes e testes de usabilidade. Primeira imersão em times multidisciplinares.</p>
+            <div class="out" style="text-align:right;">Setor<b>Studio</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clientes -->
+  <section id="clientes">
+    <div class="sec px">
+      <div class="sec-l">§ 03</div>
+      <div>
+        <h2 class="serif">Clientes <span class="lo">&amp; colaboradores,</span> 2024 — 2026</h2>
+
+        <div class="exp">
+          <div class="exp-row rv"><span class="yr">2025—</span><span class="nm serif">Lacuna Bank</span><span class="rl">Lead designer, banking</span><span class="ar">Fintech / São Paulo</span><span class="ar2">●</span></div>
+          <div class="exp-row rv"><span class="yr">2024—25</span><span class="nm serif">Helio Health</span><span class="rl">Principal designer</span><span class="ar">Saúde / São Paulo</span><span class="ar2">●</span></div>
+          <div class="exp-row rv"><span class="yr">2024</span><span class="nm serif">Atelier Norte</span><span class="rl">Design lead, commerce</span><span class="ar">Varejo / Belo Horizonte</span><span class="ar2">○</span></div>
+          <div class="exp-row rv"><span class="yr">2024</span><span class="nm serif">Pier Systems</span><span class="rl">Founding product designer</span><span class="ar">SaaS / Santos</span><span class="ar2">●</span></div>
+          <div class="exp-row rv"><span class="yr">2024</span><span class="nm serif">Verde Logística</span><span class="rl">UX Designer, freelance</span><span class="ar">Logística / ESG / SP</span><span class="ar2">○</span></div>
+          <div class="exp-row rv"><span class="yr">2024</span><span class="nm serif">Companhia das Docas</span><span class="rl">UX/UI Designer JR</span><span class="ar">Portuário / Santos</span><span class="ar2">○</span></div>
+          <div class="exp-row rv"><span class="yr">2024</span><span class="nm serif">Estudúdio</span><span class="rl">Estágio em design de produto</span><span class="ar">Studio / São Paulo</span><span class="ar2">○</span></div>
+          <div class="exp-row rv"><span class="yr">—</span><span class="nm serif lo">+ mentorias · bootcamps · comunidade</span><span class="rl">Voluntária, facilitadora</span><span class="ar">Educação</span><span class="ar2">·</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="foot-grid">
+      <div class="foot-mark">§ 04 / Contato</div>
+      <div class="foot-main">
+        <a href="mailto:contato.thaisaabreu@gmail.com" class="foot-mail serif">
+          contato<span class="lo">@thaisaabreu</span>
+        </a>
+        <div class="foot-col">
+          <h5>Localização</h5>
+          <b>Santos, SP</b>
+          <b>São Paulo, BR</b>
+        </div>
+        <div class="foot-col">
+          <h5>Redes</h5>
+          <a href="#">LinkedIn <span>↗</span></a>
+          <a href="#">Behance <span>↗</span></a>
+          <a href="#">Instagram <span>↗</span></a>
+        </div>
+        <div class="foot-col">
+          <h5>Disponibilidade</h5>
+          <b>Aberta · 2026</b>
+          <a href="#">Currículo · PDF <span>↗</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-end">
+      <div class="foot-mark">v.01</div>
+      <div class="foot-end-r">
+        <span>© 2026 Thaisa Souza — designer independente</span>
+        <span>Feito com cuidado, no Brasil</span>
+        <span>Última atualização · 19.05.26</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="tweaks-root"></div>
+
+  <script>
+    // Cursor
+    (function(){
+      const dot = document.getElementById('curDot');
+      const ring = document.getElementById('curRing');
+      let mx=window.innerWidth/2, my=window.innerHeight/2;
+      let rx=mx, ry=my;
+      window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`; });
+      function loop(){ rx += (mx-rx)*0.2; ry += (my-ry)*0.2; ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`; requestAnimationFrame(loop); }
+      loop();
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('hov-link'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('hov-link'));
+      });
+      document.querySelectorAll('.card').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('hov-img'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('hov-img'));
+      });
+    })();
+
+    // Reveals
+    (function(){
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.rv').forEach(el => io.observe(el));
+    })();
+
+    // Parallax — cards drift slightly on scroll, preserving stagger offsets
+    (function(){
+      const cards = document.querySelectorAll('.card');
+      const baseOffsets = [0, 64, -32, 32];
+      window.addEventListener('scroll', () => {
+        cards.forEach((el, i) => {
+          const r = el.getBoundingClientRect();
+          const c = (r.top + r.height/2) - window.innerHeight/2;
+          const t = Math.max(-30, Math.min(30, -c * 0.025));
+          const base = baseOffsets[i] || 0;
+          el.style.transform = `translateY(${base + t}px)`;
+        });
+        const phs = document.querySelectorAll('.card .ph');
+        phs.forEach(el => {
+          const r = el.getBoundingClientRect();
+          const c = (r.top + r.height/2) - window.innerHeight/2;
+          const t = Math.max(-20, Math.min(20, -c * 0.02));
+          el.style.transform = `translateY(${t}px) scale(1.05)`;
+        });
+      }, { passive: true });
+    })();
+
+    // Live local time SP
+    (function(){
+      const el = document.querySelector('.top .right span');
+      function update() {
+        const now = new Date();
+        const opts = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false };
+        try { el.textContent = 'SP ' + new Intl.DateTimeFormat('en-GB', opts).format(now); } catch(e) {}
+      }
+      update(); setInterval(update, 30000);
+    })();
+  </script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "palette": [
+        "#f5f3ee",
+        "#1a1a1a",
+        "#7a6f5d"
+      ],
+      "density": "regular",
+      "displayFont": "serif",
+      "dark": false
+    }/*EDITMODE-END*/;
+
+    const PALETTES = [
+      ["#f5f3ee", "#1a1a1a", "#7a6f5d"],
+      ["#ffffff", "#0a0a0a", "#666666"],
+      ["#ebe7df", "#2a2622", "#c4541a"],
+      ["#eef0e9", "#16201a", "#3f6a4c"]
+    ];
+
+    function applyTweaks(t) {
+      const b = document.body;
+      b.classList.toggle('dark', !!t.dark);
+      b.classList.remove('dense','comfy');
+      if (t.density === 'compact') b.classList.add('dense');
+      if (t.density === 'comfy')   b.classList.add('comfy');
+      b.classList.remove('font-serif-display','font-mono-display');
+      b.classList.add(t.displayFont === 'mono' ? 'font-mono-display' : 'font-serif-display');
+      if (!t.dark && Array.isArray(t.palette)) {
+        const [bg, fg, muted] = t.palette;
+        b.style.setProperty('--bg', bg);
+        b.style.setProperty('--fg', fg);
+        b.style.setProperty('--muted', muted);
+        b.style.setProperty('--fg-soft', fg);
+        b.style.setProperty('--muted-2', muted + '66');
+        b.style.setProperty('--line', fg + '1a');
+        b.style.setProperty('--hairline', fg + '2e');
+        b.style.setProperty('--bg-2', bg + 'ee');
+      } else if (t.dark) {
+        ['--bg','--fg','--muted','--fg-soft','--muted-2','--line','--hairline','--bg-2'].forEach(k => b.style.removeProperty(k));
+      }
+    }
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      React.useEffect(() => applyTweaks(t), [t]);
+      return (
+        <TweaksPanel>
+          <TweakSection label="Tema" />
+          <TweakColor label="Paleta" value={t.palette}
+            options={PALETTES}
+            onChange={(v) => setTweak('palette', v)} />
+          <TweakToggle label="Modo escuro" value={t.dark}
+            onChange={(v) => setTweak('dark', v)} />
+          <TweakSection label="Tipografia" />
+          <TweakRadio label="Display" value={t.displayFont}
+            options={[{value:'serif',label:'Serif'},{value:'mono',label:'Mono'}]}
+            onChange={(v) => setTweak('displayFont', v)} />
+          <TweakSection label="Layout" />
+          <TweakRadio label="Densidade" value={t.density}
+            options={[{value:'compact',label:'Compact'},{value:'regular',label:'Regular'},{value:'comfy',label:'Comfy'}]}
+            onChange={(v) => setTweak('density', v)} />
+        </TweaksPanel>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App />);
+  </script>
+</body>
+</html>
