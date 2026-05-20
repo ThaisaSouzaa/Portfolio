@@ -429,7 +429,7 @@
           </article>
 
           <article class="card rv rv-d1" onclick="location.href='flohere.html'" style="cursor:pointer;">
-            <div id="mount-flohere-cover" style="position:absolute;inset:0;background:oklch(0.42 0.07 155);overflow:hidden;display:flex;align-items:flex-end;justify-content:center;gap:20px;padding-top:32px;"></div>
+            <div id="mount-flohere-cover" style="position:absolute;inset:0;background:oklch(0.42 0.07 155);overflow:hidden;display:flex;align-items:flex-end;justify-content:center;gap:16px;padding-bottom:0;"></div>
             <div class="card-h"><span>02 · FloHere</span><span>2022—2023</span></div>
             <div class="card-b">
               <div class="ttl serif">App de <em>floricultura</em> para compras online</div>
@@ -639,12 +639,13 @@
       const el = document.getElementById('mount-flohere-cover');
       if (!el) return;
       const TWEAK_F = { palette: 'sage', dark: false, font: 'Manrope', display: 'serif' };
-      const h = el.offsetHeight || 320;
-      const scale = Math.min(h / 780 * 1.18, 0.50);
       const W = 360, H = 780;
+      // Fit 2 phones side by side, filling most of the card width
+      const availW = el.offsetWidth || 560;
+      const scale = Math.min((availW - 32) / (2 * W), 0.78);
       function PhCard({ Screen }) {
         return (
-          <div style={{ width: W * scale, height: H * scale, flexShrink: 0, borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ width: W * scale, height: H * scale, flexShrink: 0, borderRadius: 18, overflow: 'hidden' }}>
             <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: W, height: H }}>
               <Screen tweak={TWEAK_F} />
             </div>
@@ -654,7 +655,6 @@
       const root = ReactDOM.createRoot(el);
       root.render(
         <React.Fragment>
-          <PhCard Screen={window.ScreenFeed} />
           <PhCard Screen={window.ScreenProduct} />
           <PhCard Screen={window.ScreenCart} />
         </React.Fragment>
